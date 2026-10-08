@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle do ESP32</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+    .card { background: #fff; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    input { padding: 10px; width: 220px; margin-bottom: 20px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+    button { padding: 12px 24px; font-size: 16px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
+    .btn-on { background-color: #28a745; }
+    .btn-off { background-color: #dc3545; }
+    #status { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Controle do ESP32</h2>
+    <p>Insira o IP do ESP32 na rede local:</p>
+    <input type="text" id="ipAddress" placeholder="Ex: 192.168.1.100">
+    <br>
+    <button class="btn-on" onclick="controlLed('H')">LIGAR LED</button>
+    <button class="btn-off" onclick="controlLed('L')">DESLIGAR LED</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function controlLed(state) {
+      const ip = document.getElementById('ipAddress').value.trim();
+      const statusDiv = document.getElementById('status');
+
+      if (!ip) {
+        statusDiv.innerText = "Por favor, digite o IP do ESP32.";
+        statusDiv.style.color = "red";
+        return;
+      }
+
+      statusDiv.innerText = "Enviando comando...";
+      statusDiv.style.color = "#555";
+
+      fetch(`http://${ip}/${state}`, { method: 'GET', mode: 'cors' })
+        .then(response => {
+          if (response.ok) {
+            statusDiv.innerText = state === 'H' ? "LED Ligado!" : "LED Desligado!";
+            statusDiv.style.color = "green";
+          } else {
+            statusDiv.innerText = "Erro ao processar o comando no ESP32.";
+            statusDiv.style.color = "red";
+          }
+        })
+        .catch(err => {
+          statusDiv.innerText = "Erro de conexão. Verifique o IP e habilite 'Conteúdo não seguro' no navegador.";
+          statusDiv.style.color = "red";
+          console.error("Erro na requisição:", err);
+        });
+    }
+  </script>
+</body>
+</html>
