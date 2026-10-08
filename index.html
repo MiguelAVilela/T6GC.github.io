@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle do ESP32</title>
+  <title>Controle do ESP32 / Arduino UNO Q</title>
+  <!-- Biblioteca MQTT para Navegador -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
     .card { background: #fff; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    input { padding: 10px; width: 220px; margin-bottom: 20px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
     button { padding: 12px 24px; font-size: 16px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
     .btn-on { background-color: #28a745; }
     .btn-off { background-color: #dc3545; }
@@ -16,44 +17,39 @@
 </head>
 <body>
   <div class="card">
-    <h2>Controle do ESP32</h2>
-    <p>Insira o IP do ESP32 na rede local:</p>
-    <input type="text" id="ipAddress" placeholder="Ex: 192.168.1.100">
-    <br>
-    <button class="btn-on" onclick="controlLed('H')">LIGAR LED</button>
-    <button class="btn-off" onclick="controlLed('L')">DESLIGAR LED</button>
-    <p id="status"></p>
+    <h2>Controle Global do Arduino UNO Q</h2>
+    <button class="btn-on" onclick="sendMQTT('H')">LIGAR LED</button>
+    <button class="btn-off" onclick="sendMQTT('L')">DESLIGAR LED</button>
+    <p id="status">Conectando ao servidor...</p>
   </div>
 
   <script>
-    function controlLed(state) {
-      const ip = document.getElementById('ipAddress').value.trim();
-      const statusDiv = document.getElementById('status');
+    // Configurações do Broker MQTT Público (HiveMQ)
+    const topic = "miguel_avilela/t6gc/led";
+    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "web_client_" + parseInt(Math.random() * 100, 10));
 
-      if (!ip) {
-        statusDiv.innerText = "Por favor, digite o IP do ESP32.";
-        statusDiv.style.color = "red";
+    client.onConnectionLost = function(responseObject) {
+      document.getElementById("status").innerText = "Conexão perdida. A reconectar...";
+      document.getElementById("status").style.color = "red";
+    };
+
+    client.connect({
+      useSSL: true,
+      onSuccess: function() {
+        document.getElementById("status").innerText = "Conectado! Pronto para enviar comandos.";
+        document.getElementById("status").style.color = "green";
+      }
+    });
+
+    function sendMQTT(state) {
+      if (!client.isConnected()) {
+        alert("Ainda não está conectado ao servidor MQTT!");
         return;
       }
-
-      statusDiv.innerText = "Enviando comando...";
-      statusDiv.style.color = "#555";
-
-      fetch(`http://${ip}/${state}`, { method: 'GET', mode: 'cors' })
-        .then(response => {
-          if (response.ok) {
-            statusDiv.innerText = state === 'H' ? "LED Ligado!" : "LED Desligado!";
-            statusDiv.style.color = "green";
-          } else {
-            statusDiv.innerText = "Erro ao processar o comando no ESP32.";
-            statusDiv.style.color = "red";
-          }
-        })
-        .catch(err => {
-          statusDiv.innerText = "Erro de conexão. Verifique o IP e habilite 'Conteúdo não seguro' no navegador.";
-          statusDiv.style.color = "red";
-          console.error("Erro na requisição:", err);
-        });
+      const message = new Paho.MQTT.Message(state);
+      message.destinationName = topic;
+      client.send(message);
+      document.getElementById("status").innerText = state === 'H' ? "Comando LIGAR enviado!" : "Comando DESLIGAR enviado!";
     }
   </script>
 </body>
