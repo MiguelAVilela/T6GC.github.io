@@ -2,55 +2,67 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle do ESP32 / Arduino UNO Q</title>
-  <!-- Biblioteca MQTT para Navegador -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Controle de LED - ESP32</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
-    .card { background: #fff; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    button { padding: 12px 24px; font-size: 16px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-    .btn-on { background-color: #28a745; }
-    .btn-off { background-color: #dc3545; }
-    #status { margin-top: 15px; font-weight: bold; }
+    body { font-family: system-ui, sans-serif; background:#111; color:#eee;
+           display:flex; flex-direction:column; align-items:center;
+           justify-content:center; min-height:100vh; margin:0; gap:20px; }
+    #lamp { width:120px; height:120px; border-radius:50%; background:#333;
+            transition:.3s; box-shadow:0 0 0 #0000; }
+    #lamp.on { background:#ffd400; box-shadow:0 0 60px #ffd400; }
+    .btns { display:flex; gap:12px; }
+    button { font-size:1.1rem; padding:14px 28px; border:0; border-radius:10px;
+             cursor:pointer; color:#fff; }
+    #btnOn { background:#2e9e4f; }
+    #btnOff { background:#c0392b; }
+    button:disabled { opacity:.4; cursor:not-allowed; }
+    #status { font-size:.9rem; color:#aaa; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Controle Global do Arduino UNO Q</h2>
-    <button class="btn-on" onclick="sendMQTT('H')">LIGAR LED</button>
-    <button class="btn-off" onclick="sendMQTT('L')">DESLIGAR LED</button>
-    <p id="status">Conectando ao servidor...</p>
+  <h1>LED do ESP32</h1>
+  <div id="lamp"></div>
+  <div class="btns">
+    <button id="btnOn" disabled>Ligar</button>
+    <button id="btnOff" disabled>Desligar</button>
   </div>
+  <div id="status">Conectando ao broker...</div>
 
+  <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
   <script>
-    // Configurações do Broker MQTT Público (HiveMQ)
-    const topic = "miguel_avilela/t6gc/led";
-    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "web_client_" + parseInt(Math.random() * 100, 10));
+    // Troque por um nome único para que ninguém mais controle seu LED
+    const TOPICO = "t6gc/miguelavilela/led";
+    const TOPICO_STATUS = TOPICO + "/status";
 
-    client.onConnectionLost = function(responseObject) {
-      document.getElementById("status").innerText = "Conexão perdida. A reconectar...";
-      document.getElementById("status").style.color = "red";
-    };
+    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt", {
+      clientId: "site_" + Math.random().toString(16).slice(2, 10)
+    });
 
-    client.connect({
-      useSSL: true,
-      onSuccess: function() {
-        document.getElementById("status").innerText = "Conectado! Pronto para enviar comandos.";
-        document.getElementById("status").style.color = "green";
+    const lamp = document.getElementById("lamp");
+    const statusEl = document.getElementById("status");
+    const btnOn = document.getElementById("btnOn");
+    const btnOff = document.getElementById("btnOff");
+
+    client.on("connect", () => {
+      statusEl.textContent = "Conectado ao broker ✔";
+      btnOn.disabled = btnOff.disabled = false;
+      client.subscribe(TOPICO_STATUS);
+    });
+
+    client.on("close", () => {
+      statusEl.textContent = "Desconectado. Tentando reconectar...";
+      btnOn.disabled = btnOff.disabled = true;
+    });
+
+    client.on("message", (topic, msg) => {
+      if (topic === TOPICO_STATUS) {
+        lamp.classList.toggle("on", msg.toString() === "ON");
       }
     });
 
-    function sendMQTT(state) {
-      if (!client.isConnected()) {
-        alert("Ainda não está conectado ao servidor MQTT!");
-        return;
-      }
-      const message = new Paho.MQTT.Message(state);
-      message.destinationName = topic;
-      client.send(message);
-      document.getElementById("status").innerText = state === 'H' ? "Comando LIGAR enviado!" : "Comando DESLIGAR enviado!";
-    }
+    btnOn.onclick  = () => client.publish(TOPICO, "ON");
+    btnOff.onclick = () => client.publish(TOPICO, "OFF");
   </script>
 </body>
 </html>
