@@ -2,67 +2,49 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Controle de Temperatura - ESP32</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background:#111; color:#eee;
-           display:flex; flex-direction:column; align-items:center;
-           justify-content:center; min-height:100vh; margin:0; gap:20px; }
-    #lamp { width:120px; height:120px; border-radius:50%; background:#333;
-            transition:.3s; box-shadow:0 0 0 #0000; }
-    #lamp.on { background:#ffd400; box-shadow:0 0 60px #ffd400; }
-    .btns { display:flex; gap:12px; }
-    button { font-size:1.1rem; padding:14px 28px; border:0; border-radius:10px;
-             cursor:pointer; color:#fff; }
-    #btnOn { background:#2e9e4f; }
-    #btnOff { background:#c0392b; }
-    button:disabled { opacity:.4; cursor:not-allowed; }
-    #status { font-size:.9rem; color:#aaa; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Temperatura - ESP32 + LM35</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca MQTT.js via CDN -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body>
-  <h1>Resistor do ESP32</h1>
-  <div id="lamp"></div>
-  <div class="btns">
-    <button id="btnOn" disabled>Ligar</button>
-    <button id="btnOff" disabled>Desligar</button>
-  </div>
-  <div id="status">Conectando ao broker...</div>
+  <main class="container">
+    <header>
+      <h1>Monitoramento Térmico</h1>
+      <p class="subtitulo">ESP32 + Sensor LM35 em Tempo Real</p>
+      <div id="status-badge" class="status desconectado">
+        <span class="dot"></span>
+        <span id="status-texto">Conectando ao broker...</span>
+      </div>
+    </header>
 
-  <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
-  <script>
-    // Troque por um nome único para que ninguém mais controle seu LED
-    const TOPICO = "t6gc/miguelavilela/led";
-    const TOPICO_STATUS = TOPICO + "/status";
+    <section class="card-principal">
+      <span class="label">Temperatura Atual</span>
+      <div class="valor-container">
+        <span id="temp-atual">--.-</span>
+        <span class="unidade">°C</span>
+      </div>
+      <p id="ultima-atualizacao" class="timestamp">Aguardando leitura do sensor...</p>
+    </section>
 
-    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt", {
-      clientId: "site_" + Math.random().toString(16).slice(2, 10)
-    });
+    <section class="grid-stats">
+      <div class="stat-box">
+        <span class="stat-label">Mínima</span>
+        <span id="temp-min" class="stat-valor">--.- °C</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Máxima</span>
+        <span id="temp-max" class="stat-valor">--.- °C</span>
+      </div>
+    </section>
 
-    const lamp = document.getElementById("lamp");
-    const statusEl = document.getElementById("status");
-    const btnOn = document.getElementById("btnOn");
-    const btnOff = document.getElementById("btnOff");
+    <section class="historico-box">
+      <h2>Últimas Leituras</h2>
+      <ul id="lista-historico"></ul>
+    </section>
+  </main>
 
-    client.on("connect", () => {
-      statusEl.textContent = "Conectado ao broker ✔";
-      btnOn.disabled = btnOff.disabled = false;
-      client.subscribe(TOPICO_STATUS);
-    });
-
-    client.on("close", () => {
-      statusEl.textContent = "Desconectado. Tentando reconectar...";
-      btnOn.disabled = btnOff.disabled = true;
-    });
-
-    client.on("message", (topic, msg) => {
-      if (topic === TOPICO_STATUS) {
-        lamp.classList.toggle("on", msg.toString() === "ON");
-      }
-    });
-
-    btnOn.onclick  = () => client.publish(TOPICO, "ON");
-    btnOff.onclick = () => client.publish(TOPICO, "OFF");
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
