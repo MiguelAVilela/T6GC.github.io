@@ -3,41 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitor de Temperatura - ESP32 + LM35</title>
+  <title>Monitor Climático - ESP32 + DHT22</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Biblioteca MQTT.js via CDN -->
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body>
   <main class="container">
     <header>
-      <h1>Monitoramento Térmico</h1>
-      <p class="subtitulo">ESP32 + Sensor LM35 em Tempo Real</p>
+      <h1>Monitoramento Climático</h1>
+      <p class="subtitulo">ESP32 + Sensor DHT22 em Tempo Real</p>
       <div id="status-badge" class="status desconectado">
         <span class="dot"></span>
         <span id="status-texto">Conectando ao broker...</span>
       </div>
     </header>
 
-    <section class="card-principal">
-      <span class="label">Temperatura Atual</span>
-      <div class="valor-container">
-        <span id="temp-atual">--.-</span>
-        <span class="unidade">°C</span>
+    <section class="grid-principais">
+      <div class="card-principal">
+        <span class="label">Temperatura</span>
+        <div class="valor-container">
+          <span id="temp-atual" class="valor-numero">--.-</span>
+          <span class="unidade">°C</span>
+        </div>
+        <div class="mini-stats">
+          <span>Mín: <strong id="temp-min">--.-</strong>°</span>
+          <span>Máx: <strong id="temp-max">--.-</strong>°</span>
+        </div>
       </div>
-      <p id="ultima-atualizacao" class="timestamp">Aguardando leitura do sensor...</p>
+
+      <div class="card-principal">
+        <span class="label">Umidade Relativa</span>
+        <div class="valor-container">
+          <span id="umid-atual" class="valor-numero umid-cor">--.-</span>
+          <span class="unidade">%</span>
+        </div>
+        <div class="mini-stats">
+          <span>Mín: <strong id="umid-min">--.-</strong>%</span>
+          <span>Máx: <strong id="umid-max">--.-</strong>%</span>
+        </div>
+      </div>
     </section>
 
-    <section class="grid-stats">
-      <div class="stat-box">
-        <span class="stat-label">Mínima</span>
-        <span id="temp-min" class="stat-valor">--.- °C</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-label">Máxima</span>
-        <span id="temp-max" class="stat-valor">--.- °C</span>
-      </div>
-    </section>
+    <p id="ultima-atualizacao" class="timestamp">Aguardando leitura do sensor...</p>
 
     <section class="historico-box">
       <h2>Últimas Leituras</h2>
