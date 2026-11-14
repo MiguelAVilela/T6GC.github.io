@@ -1,4 +1,3 @@
-// Conexão WebSocket Segura (WSS) obrigatória para GitHub Pages (HTTPS)
 const BROKER_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const PREFIXO = 'miguelavilela/t6gc';
 
@@ -8,13 +7,17 @@ const estados = {
   bomba: false
 };
 
+console.log('Iniciando conexão com o broker:', BROKER_URL);
+
 const client = mqtt.connect(BROKER_URL, {
   clientId: 'web_t6gc_' + Math.random().toString(16).substring(2, 10),
   clean: true,
-  reconnectPeriod: 3000
+  reconnectPeriod: 3000,
+  connectTimeout: 10000
 });
 
 client.on('connect', () => {
+  console.log('Conectado ao Broker MQTT com sucesso!');
   document.getElementById('dot-broker').classList.add('online');
   document.getElementById('txt-broker').textContent = 'Broker Conectado';
 
@@ -25,7 +28,13 @@ client.on('connect', () => {
   client.subscribe(`${PREFIXO}/bomba/state`);
 });
 
+client.on('error', (err) => {
+  console.error('Erro na conexão MQTT:', err);
+  document.getElementById('txt-broker').textContent = 'Erro no Broker';
+});
+
 client.on('close', () => {
+  console.warn('Conexão MQTT fechada.');
   document.getElementById('dot-broker').classList.remove('online');
   document.getElementById('txt-broker').textContent = 'Reconectando...';
 });
@@ -81,7 +90,6 @@ function alternarDispositivo(dispositivo) {
   atualizarInterface(dispositivo, novoEstado);
 }
 
-// Associa os eventos de clique aos botões sem usar onclick inline no HTML
 document.querySelectorAll('button[data-dispositivo]').forEach((botao) => {
   botao.addEventListener('click', () => {
     const dispositivo = botao.getAttribute('data-dispositivo');
