@@ -1,57 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitor Climático - ESP32 + DHT22</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Controle ESP32 - T6GC</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <main class="container">
+  <div class="container">
     <header>
-      <h1>Monitoramento Climático</h1>
-      <p class="subtitulo">ESP32 + Sensor DHT22 em Tempo Real</p>
-      <div id="status-badge" class="status desconectado">
-        <span class="dot"></span>
-        <span id="status-texto">Conectando ao broker...</span>
+      <h1>Automação ESP32</h1>
+      <div class="badges">
+        <div class="badge">
+          <span id="dot-broker" class="dot"></span>
+          <span id="txt-broker">Broker</span>
+        </div>
+        <div class="badge">
+          <span id="dot-esp" class="dot"></span>
+          <span id="txt-esp">ESP32 Offline</span>
+        </div>
       </div>
     </header>
 
-    <section class="grid-principais">
-      <div class="card-principal">
-        <span class="label">Temperatura</span>
-        <div class="valor-container">
-          <span id="temp-atual" class="valor-numero">--.-</span>
-          <span class="unidade">°C</span>
-        </div>
-        <div class="mini-stats">
-          <span>Mín: <strong id="temp-min">--.-</strong>°</span>
-          <span>Máx: <strong id="temp-max">--.-</strong>°</span>
-        </div>
+    <!-- Leituras do DHT22 -->
+    <section class="grid-sensores">
+      <div class="card">
+        <div class="sensor-label">🌡️ Temperatura</div>
+        <div class="sensor-valor" id="valor-temp">-- °C</div>
       </div>
-
-      <div class="card-principal">
-        <span class="label">Umidade Relativa</span>
-        <div class="valor-container">
-          <span id="umid-atual" class="valor-numero umid-cor">--.-</span>
-          <span class="unidade">%</span>
-        </div>
-        <div class="mini-stats">
-          <span>Mín: <strong id="umid-min">--.-</strong>%</span>
-          <span>Máx: <strong id="umid-max">--.-</strong>%</span>
-        </div>
+      <div class="card">
+        <div class="sensor-label">💧 Umidade</div>
+        <div class="sensor-valor" id="valor-umid">-- %</div>
       </div>
     </section>
 
-    <p id="ultima-atualizacao" class="timestamp">Aguardando leitura do sensor...</p>
+    <!-- Controle dos Relés -->
+    <section class="grid-controles">
+      <div class="card controle-card" id="card-ventoinha">
+        <div class="controle-topo">
+          <span class="controle-nome">🌀 Ventoinha</span>
+          <span class="estado-texto" id="status-ventoinha">Desligada</span>
+        </div>
+        <button id="btn-ventoinha" data-dispositivo="ventoinha">Ligar</button>
+      </div>
 
-    <section class="historico-box">
-      <h2>Últimas Leituras</h2>
-      <ul id="lista-historico"></ul>
+      <div class="card controle-card" id="card-lampada">
+        <div class="controle-topo">
+          <span class="controle-nome">💡 Lâmpada</span>
+          <span class="estado-texto" id="status-lampada">Desligada</span>
+        </div>
+        <button id="btn-lampada" data-dispositivo="lampada">Ligar</button>
+      </div>
+
+      <div class="card controle-card" id="card-bomba">
+        <div class="controle-topo">
+          <span class="controle-nome">🚰 Bomba de Água</span>
+          <span class="estado-texto" id="status-bomba">Desligada</span>
+        </div>
+        <button id="btn-bomba" data-dispositivo="bomba">Ligar</button>
+      </div>
     </section>
-  </main>
 
-  <script src="script.js"></script>
+    <footer id="ultima-atualizacao">Aguardando dados do sensor...</footer>
+  </div>
 </body>
 </html>
