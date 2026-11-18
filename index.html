@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Controle ESP32 - T6GC</title>
+  <title>Estufa T6GC - Painel de Controle</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js" defer></script>
   <script src="script.js" defer></script>
@@ -11,7 +15,20 @@
 <body>
   <div class="container">
     <header>
-      <h1>🎀 Automação ESP32</h1>
+      <div class="marca">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 29V14" stroke="#cfe8c6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 18C9 18 5.5 13.5 5 7c6.5 0 10.5 4 11 11Z" fill="#a6e39a"/>
+            <path d="M16 15c0-6 3.5-10 11-11-.5 7-4.5 11-11 11Z" fill="#8cc084"/>
+            <path d="M8 29h16" stroke="#cfe8c6" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Estufa T6GC</h1>
+          <p class="subtitulo">Monitoramento e controle via ESP32</p>
+        </div>
+      </div>
       <div class="badges">
         <div class="badge">
           <span id="dot-broker" class="dot"></span>
@@ -34,22 +51,24 @@
     </section>
 
     <!-- Leituras do DHT22 -->
+    <h2 class="titulo-secao">Clima interno</h2>
     <section class="grid-sensores">
-      <div class="card">
-        <div class="sensor-label">🌸 Temperatura</div>
+      <div class="card sensor-card temperatura">
+        <div class="sensor-label">🌡️ Temperatura</div>
         <div class="sensor-valor" id="valor-temp">-- °C</div>
       </div>
-      <div class="card">
-        <div class="sensor-label">🫧 Umidade</div>
+      <div class="card sensor-card umidade">
+        <div class="sensor-label">💧 Umidade</div>
         <div class="sensor-valor" id="valor-umid">-- %</div>
       </div>
     </section>
 
     <!-- Controle dos Relés -->
+    <h2 class="titulo-secao">Equipamentos</h2>
     <section class="grid-controles">
       <div class="card controle-card" id="card-ventoinha">
         <div class="controle-topo">
-          <span class="controle-nome">🦢 Ventoinha</span>
+          <span class="controle-nome">🍃 Ventoinha</span>
           <span class="estado-texto" id="status-ventoinha">Desligada</span>
         </div>
         <button id="btn-ventoinha" data-dispositivo="ventoinha">Ligar</button>
@@ -57,7 +76,7 @@
 
       <div class="card controle-card" id="card-lampada">
         <div class="controle-topo">
-          <span class="controle-nome">🕯️ Lâmpada</span>
+          <span class="controle-nome">☀️ Lâmpada</span>
           <span class="estado-texto" id="status-lampada">Desligada</span>
         </div>
         <button id="btn-lampada" data-dispositivo="lampada">Ligar</button>
@@ -65,7 +84,7 @@
 
       <div class="card controle-card" id="card-bomba">
         <div class="controle-topo">
-          <span class="controle-nome">🌷 Bomba de Água</span>
+          <span class="controle-nome">🚿 Bomba de Água</span>
           <span class="estado-texto" id="status-bomba">Desligada</span>
         </div>
         <button id="btn-bomba" data-dispositivo="bomba">Ligar</button>
@@ -73,7 +92,7 @@
 
       <div class="card controle-card" id="card-peltier">
         <div class="controle-topo">
-          <span class="controle-nome">🌡️ Módulo Peltier</span>
+          <span class="controle-nome">♨️ Módulo Peltier</span>
           <span class="estado-texto" id="status-peltier">Desligada</span>
         </div>
         <div class="grupo-botoes-peltier">
