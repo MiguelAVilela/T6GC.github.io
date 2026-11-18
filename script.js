@@ -4,10 +4,9 @@ const PREFIXO = 'miguelavilela/t6gc';
 const estados = {
   ventoinha: false,
   lampada: false,
-  bomba: false
+  bomba: false,
+  peltier: false
 };
-
-console.log('Iniciando conexão com o broker:', BROKER_URL);
 
 const client = mqtt.connect(BROKER_URL, {
   clientId: 'web_t6gc_' + Math.random().toString(16).substring(2, 10),
@@ -17,7 +16,6 @@ const client = mqtt.connect(BROKER_URL, {
 });
 
 client.on('connect', () => {
-  console.log('Conectado ao Broker MQTT com sucesso!');
   document.getElementById('dot-broker').classList.add('online');
   document.getElementById('txt-broker').textContent = 'Broker Conectado';
 
@@ -26,6 +24,7 @@ client.on('connect', () => {
   client.subscribe(`${PREFIXO}/ventoinha/state`);
   client.subscribe(`${PREFIXO}/lampada/state`);
   client.subscribe(`${PREFIXO}/bomba/state`);
+  client.subscribe(`${PREFIXO}/peltier/state`);
 });
 
 client.on('error', (err) => {
@@ -34,7 +33,6 @@ client.on('error', (err) => {
 });
 
 client.on('close', () => {
-  console.warn('Conexão MQTT fechada.');
   document.getElementById('dot-broker').classList.remove('online');
   document.getElementById('txt-broker').textContent = 'Reconectando...';
 });
@@ -77,7 +75,7 @@ function atualizarInterface(dispositivo, ligado) {
   const btn = document.getElementById(`btn-${dispositivo}`);
 
   card.classList.toggle('ativo', ligado);
-  status.textContent = ligado ? 'Ligada' : 'Desligada';
+  status.textContent = ligado ? 'Ligado' : 'Desligado';
   btn.textContent = ligado ? 'Desligar' : 'Ligar';
   btn.classList.toggle('ligado', ligado);
 }
