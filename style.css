@@ -1,29 +1,39 @@
 :root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --accent: #38bdf8;
-  --on: #22c55e;
-  --off: #475569;
-  --danger: #ef4444;
+  --bg-gradiente: linear-gradient(135deg, #fff5f8 0%, #ffe4ee 50%, #fdf2f8 100%);
+  --card: rgba(255, 255, 255, 0.88);
+  --borda-renda: #f9a8d4;
+  --borda-suave: #fbcfe8;
+  --texto: #703b54;
+  --muted: #b07893;
+  --rosa-principal: #f472b6;
+  --rosa-escuro: #db2777;
+  --rosa-claro: #fce7f3;
+  --on-bg: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
+  --off-bg: #fff0f6;
+  --sombra: 0 10px 25px -5px rgba(244, 114, 182, 0.18);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
+  background: var(--bg-gradiente);
+  background-attachment: fixed;
+  color: var(--texto);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem;
+  padding: 2.5rem 1rem;
+  /* Textura sutil de poá (bolinhas kawaii) */
+  background-image:
+    radial-gradient(#f9a8d4 1px, transparent 1px),
+    var(--bg-gradiente);
+  background-size: 24px 24px, 100% 100%;
 }
 
 .container {
@@ -38,11 +48,42 @@ header {
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
+  background: var(--card);
+  padding: 1.25rem 1.5rem;
+  border-radius: 28px;
+  border: 2px dashed var(--borda-renda);
+  box-shadow: var(--sombra);
+}
+
+.titulo-grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.laco-topo {
+  font-size: 1.5rem;
+  color: var(--rosa-escuro);
 }
 
 h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.55rem;
+  color: var(--rosa-escuro);
+  letter-spacing: 0.3px;
+}
+
+h1 span {
+  font-family: 'Quicksand', sans-serif;
+  font-style: normal;
+  font-size: 0.85rem;
+  background: var(--rosa-claro);
+  color: var(--rosa-escuro);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 0.3rem;
 }
 
 .badges {
@@ -52,62 +93,81 @@ h1 {
 
 .badge {
   font-size: 0.8rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.85rem;
   border-radius: 999px;
-  font-weight: 600;
-  background: var(--card);
-  border: 1px solid #334155;
+  font-weight: 700;
+  background: #fff;
+  border: 1.5px solid var(--borda-suave);
+  color: var(--texto);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
+  box-shadow: 0 2px 8px rgba(244, 114, 182, 0.1);
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--danger);
+  background: #fda4af;
 }
 
 .dot.online {
-  background: var(--on);
-  box-shadow: 0 0 8px var(--on);
+  background: #ec4899;
+  box-shadow: 0 0 10px #f472b6;
 }
 
 .grid-sensores {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: 1.15rem;
   margin-bottom: 1.5rem;
 }
 
 .card {
   background: var(--card);
-  border: 1px solid #334155;
-  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--borda-suave);
+  border-radius: 26px;
   padding: 1.5rem;
-  transition: transform 0.15s ease, border-color 0.2s ease;
+  box-shadow: var(--sombra);
+  transition: transform 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.sensor-card {
+  text-align: center;
+  border-style: double;
+  border-width: 4px;
+  border-color: var(--borda-renda);
 }
 
 .sensor-label {
   color: var(--muted);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.4rem;
 }
 
 .sensor-valor {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--accent);
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: var(--rosa-escuro);
 }
 
 .grid-controles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .controle-card {
@@ -118,7 +178,9 @@ h1 {
 }
 
 .controle-card.ativo {
-  border-color: var(--on);
+  border: 2px dashed var(--rosa-principal);
+  background: #fff9fb;
+  box-shadow: 0 12px 28px -4px rgba(236, 72, 153, 0.28);
 }
 
 .controle-topo {
@@ -129,45 +191,64 @@ h1 {
 
 .controle-nome {
   font-size: 1.15rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--texto);
 }
 
 .estado-texto {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: var(--rosa-claro);
   color: var(--muted);
 }
 
 .controle-card.ativo .estado-texto {
-  color: var(--on);
+  background: #fbcfe8;
+  color: var(--rosa-escuro);
 }
 
 button {
   width: 100%;
   padding: 0.85rem;
-  border: none;
-  border-radius: 10px;
+  border: 1.5px solid var(--borda-renda);
+  border-radius: 999px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  color: #fff;
-  background-color: var(--off);
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  color: var(--rosa-escuro);
+  background: var(--off-bg);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(244, 114, 182, 0.12);
 }
 
 button:hover {
-  opacity: 0.92;
+  background: #fce7f3;
+  transform: scale(1.02);
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 button.ligado {
-  background-color: var(--on);
-  color: #052e16;
+  background: var(--on-bg);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.35);
 }
 
 footer {
-  margin-top: 2rem;
-  font-size: 0.8rem;
+  margin-top: 2.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--muted);
   text-align: center;
+}
+
+.divisor-laco {
+  color: var(--rosa-principal);
+  margin-bottom: 0.4rem;
+  letter-spacing: 2px;
 }
