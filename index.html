@@ -24,6 +24,15 @@
       </div>
     </header>
 
+    <!-- Barra de Modo e Status do Fluxograma -->
+    <section class="barra-status card">
+      <div class="status-info">
+        <span class="status-titulo">Status da Estufa:</span>
+        <span class="status-valor" id="status-estufa">OK</span>
+      </div>
+      <button id="btn-modo" class="btn-modo">Modo: Automático</button>
+    </section>
+
     <!-- Leituras do DHT22 -->
     <section class="grid-sensores">
       <div class="card">
@@ -64,10 +73,14 @@
 
       <div class="card controle-card" id="card-peltier">
         <div class="controle-topo">
-          <span class="controle-nome">❄️ Módulo Peltier</span>
+          <span class="controle-nome">🌡️ Módulo Peltier</span>
           <span class="estado-texto" id="status-peltier">Desligada</span>
         </div>
-        <button id="btn-peltier" data-dispositivo="peltier">Ligar</button>
+        <div class="grupo-botoes-peltier">
+          <button id="btn-peltier-heat" data-peltier="HEAT">🔥 Esquentar</button>
+          <button id="btn-peltier-cool" data-peltier="COOL">❄️ Esfriar</button>
+          <button id="btn-peltier-off" data-peltier="OFF">Desligar</button>
+        </div>
       </div>
     </section>
 
