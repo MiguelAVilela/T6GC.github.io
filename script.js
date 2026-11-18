@@ -46,7 +46,7 @@ client.on('message', (topic, message) => {
       document.getElementById('valor-temp').textContent = `${dados.temperatura.toFixed(1)} °C`;
       document.getElementById('valor-umid').textContent = `${dados.umidade.toFixed(1)} %`;
       const hora = new Date().toLocaleTimeString('pt-BR');
-      document.getElementById('ultima-atualizacao').textContent = `Última leitura às ${hora}`;
+      document.getElementById('ultima-atualizacao').textContent = `Última leitura às ${hora} ♡`;
     } catch (e) {
       console.error('Erro ao ler JSON dos sensores:', e);
     }
@@ -75,8 +75,8 @@ function atualizarInterface(dispositivo, ligado) {
   const btn = document.getElementById(`btn-${dispositivo}`);
 
   card.classList.toggle('ativo', ligado);
-  status.textContent = ligado ? 'Ligado' : 'Desligado';
-  btn.textContent = ligado ? 'Desligar' : 'Ligar';
+  status.textContent = ligado ? '✨ Ligado' : 'Desligado';
+  btn.textContent = ligado ? '🤍 Desligar' : '🎀 Ligar';
   btn.classList.toggle('ligado', ligado);
 }
 
