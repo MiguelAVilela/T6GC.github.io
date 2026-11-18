@@ -1,11 +1,12 @@
 const BROKER_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const PREFIXO = 'miguelavilela/t6gc';
 
+let modoAutomatico = true;
 const estados = {
   ventoinha: false,
   lampada: false,
   bomba: false,
-  peltier: false
+  peltier: 'OFF' // 'OFF', 'HEAT' ou 'COOL'
 };
 
 const client = mqtt.connect(BROKER_URL, {
@@ -21,6 +22,8 @@ client.on('connect', () => {
 
   client.subscribe(`${PREFIXO}/sensores`);
   client.subscribe(`${PREFIXO}/status`);
+  client.subscribe(`${PREFIXO}/modo/state`);
+  client.subscribe(`${PREFIXO}/estufa/status`);
   client.subscribe(`${PREFIXO}/ventoinha/state`);
   client.subscribe(`${PREFIXO}/lampada/state`);
   client.subscribe(`${PREFIXO}/bomba/state`);
@@ -53,11 +56,21 @@ client.on('message', (topic, message) => {
   } 
   else if (topic === `${PREFIXO}/status`) {
     const online = payload === 'online';
-    const dot = document.getElementById('dot-esp');
-    const txt = document.getElementById('txt-esp');
-    dot.classList.toggle('online', online);
-    txt.textContent = online ? 'ESP32 Online' : 'ESP32 Offline';
-  } 
+    document.getElementById('dot-esp').classList.toggle('online', online);
+    document.getElementById('txt-esp').textContent = online ? 'ESP32 Online' : 'ESP32 Offline';
+  }
+  else if (topic === `${PREFIXO}/modo/state`) {
+    modoAutomatico = (payload === 'AUTO');
+    const btnModo = document.getElementById('btn-modo');
+    btnModo.textContent = modoAutomatico ? 'Modo: Automático' : 'Modo: Manual';
+    btnModo.classList.toggle('manual', !modoAutomatico);
+  }
+  else if (topic === `${PREFIXO}/estufa/status`) {
+    document.getElementById('status-estufa').textContent = payload;
+  }
+  else if (topic === `${PREFIXO}/peltier/state`) {
+    atualizarInterfacePeltier(payload);
+  }
   else if (topic.endsWith('/state')) {
     const partes = topic.split('/');
     const dispositivo = partes[partes.length - 2];
@@ -80,17 +93,49 @@ function atualizarInterface(dispositivo, ligado) {
   btn.classList.toggle('ligado', ligado);
 }
 
-function alternarDispositivo(dispositivo) {
-  const novoEstado = !estados[dispositivo];
-  const comando = novoEstado ? 'ON' : 'OFF';
+function atualizarInterfacePeltier(modo) {
+  estados.peltier = modo;
+  const card = document.getElementById('card-peltier');
+  const status = document.getElementById('status-peltier');
+  const btnHeat = document.getElementById('btn-peltier-heat');
+  const btnCool = document.getElementById('btn-peltier-cool');
 
-  client.publish(`${PREFIXO}/${dispositivo}/set`, comando);
-  atualizarInterface(dispositivo, novoEstado);
+  card.classList.toggle('ativo', modo !== 'OFF');
+  btnHeat.classList.toggle('ligado', modo === 'HEAT');
+  btnCool.classList.toggle('ligado', modo === 'COOL');
+
+  if (modo === 'HEAT') {
+    status.textContent = 'Esquentando';
+  } else if (modo === 'COOL') {
+    status.textContent = 'Esfriando';
+  } else {
+    status.textContent = 'Desligada';
+  }
 }
 
+// Alternar Modo Automático / Manual
+document.getElementById('btn-modo').addEventListener('click', () => {
+  const novoModo = modoAutomatico ? 'MANUAL' : 'AUTO';
+  client.publish(`${PREFIXO}/modo/set`, novoModo);
+});
+
+// Botões dos dispositivos simples
 document.querySelectorAll('button[data-dispositivo]').forEach((botao) => {
   botao.addEventListener('click', () => {
     const dispositivo = botao.getAttribute('data-dispositivo');
-    alternarDispositivo(dispositivo);
+    const novoEstado = !estados[dispositivo];
+    const comando = novoEstado ? 'ON' : 'OFF';
+
+    client.publish(`${PREFIXO}/${dispositivo}/set`, comando);
+    atualizarInterface(dispositivo, novoEstado);
+  });
+});
+
+// Botões dos 2 sentidos da Peltier
+document.querySelectorAll('button[data-peltier]').forEach((botao) => {
+  botao.addEventListener('click', () => {
+    const modo = botao.getAttribute('data-peltier');
+    client.publish(`${PREFIXO}/peltier/set`, modo);
+    atualizarInterfacePeltier(modo);
   });
 });
