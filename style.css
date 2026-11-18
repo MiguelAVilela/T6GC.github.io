@@ -1,39 +1,33 @@
 :root {
-  --bg-gradiente: linear-gradient(135deg, #fff5f8 0%, #ffe4ee 50%, #fdf2f8 100%);
-  --card: rgba(255, 255, 255, 0.88);
-  --borda-renda: #f9a8d4;
-  --borda-suave: #fbcfe8;
-  --texto: #703b54;
-  --muted: #b07893;
-  --rosa-principal: #f472b6;
-  --rosa-escuro: #db2777;
-  --rosa-claro: #fce7f3;
-  --on-bg: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
-  --off-bg: #fff0f6;
-  --sombra: 0 10px 25px -5px rgba(244, 114, 182, 0.18);
+  --bg: #fff0f6;
+  --card: #ffffff;
+  --borda: #fbcfe8;
+  --borda-forte: #f472b6;
+  --text: #831843;
+  --muted: #be185d;
+  --accent: #db2777;
+  --on: #ec4899;
+  --off: #f9a8d4;
+  --danger: #fda4af;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background: var(--bg-gradiente);
-  background-attachment: fixed;
-  color: var(--texto);
+  background-color: var(--bg);
+  background-image: radial-gradient(#f9a8d4 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem 1rem;
-  /* Textura sutil de poá (bolinhas kawaii) */
-  background-image:
-    radial-gradient(#f9a8d4 1px, transparent 1px),
-    var(--bg-gradiente);
-  background-size: 24px 24px, 100% 100%;
+  padding: 2rem 1rem;
 }
 
 .container {
@@ -50,40 +44,15 @@ header {
   margin-bottom: 2rem;
   background: var(--card);
   padding: 1.25rem 1.5rem;
-  border-radius: 28px;
-  border: 2px dashed var(--borda-renda);
-  box-shadow: var(--sombra);
-}
-
-.titulo-grupo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.laco-topo {
-  font-size: 1.5rem;
-  color: var(--rosa-escuro);
+  border-radius: 20px;
+  border: 2px solid var(--borda);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.12);
 }
 
 h1 {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: 1.55rem;
-  color: var(--rosa-escuro);
-  letter-spacing: 0.3px;
-}
-
-h1 span {
-  font-family: 'Quicksand', sans-serif;
-  font-style: normal;
-  font-size: 0.85rem;
-  background: var(--rosa-claro);
-  color: var(--rosa-escuro);
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  vertical-align: middle;
-  margin-left: 0.3rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 .badges {
@@ -93,81 +62,65 @@ h1 span {
 
 .badge {
   font-size: 0.8rem;
-  padding: 0.4rem 0.85rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  font-weight: 700;
-  background: #fff;
-  border: 1.5px solid var(--borda-suave);
-  color: var(--texto);
+  font-weight: 600;
+  background: #fdf2f8;
+  border: 1.5px solid var(--borda);
+  color: var(--text);
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  box-shadow: 0 2px 8px rgba(244, 114, 182, 0.1);
+  gap: 0.4rem;
 }
 
 .dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #fda4af;
+  background: var(--danger);
 }
 
 .dot.online {
-  background: #ec4899;
-  box-shadow: 0 0 10px #f472b6;
+  background: var(--on);
+  box-shadow: 0 0 8px var(--on);
 }
 
 .grid-sensores {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.15rem;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .card {
   background: var(--card);
-  backdrop-filter: blur(8px);
-  border: 2px solid var(--borda-suave);
-  border-radius: 26px;
+  border: 2px solid var(--borda);
+  border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: var(--sombra);
-  transition: transform 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  position: relative;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-}
-
-.sensor-card {
-  text-align: center;
-  border-style: double;
-  border-width: 4px;
-  border-color: var(--borda-renda);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.12);
+  transition: transform 0.15s ease, border-color 0.2s ease;
 }
 
 .sensor-label {
   color: var(--muted);
   font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .sensor-valor {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.6rem;
-  font-weight: 600;
-  color: var(--rosa-escuro);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 .grid-controles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.15rem;
+  gap: 1rem;
 }
 
 .controle-card {
@@ -178,9 +131,8 @@ h1 span {
 }
 
 .controle-card.ativo {
-  border: 2px dashed var(--rosa-principal);
-  background: #fff9fb;
-  box-shadow: 0 12px 28px -4px rgba(236, 72, 153, 0.28);
+  border-color: var(--borda-forte);
+  background: #fff5f9;
 }
 
 .controle-topo {
@@ -191,64 +143,47 @@ h1 span {
 
 .controle-nome {
   font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--texto);
+  font-weight: 600;
+  color: var(--text);
 }
 
 .estado-texto {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  background: var(--rosa-claro);
-  color: var(--muted);
+  text-transform: uppercase;
+  color: #f472b6;
 }
 
 .controle-card.ativo .estado-texto {
-  background: #fbcfe8;
-  color: var(--rosa-escuro);
+  color: var(--accent);
 }
 
 button {
   width: 100%;
   padding: 0.85rem;
-  border: 1.5px solid var(--borda-renda);
-  border-radius: 999px;
+  border: none;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  color: var(--rosa-escuro);
-  background: var(--off-bg);
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(244, 114, 182, 0.12);
+  color: #831843;
+  background-color: var(--off);
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 button:hover {
-  background: #fce7f3;
-  transform: scale(1.02);
-}
-
-button:active {
-  transform: scale(0.98);
+  opacity: 0.92;
 }
 
 button.ligado {
-  background: var(--on-bg);
+  background-color: var(--on);
   color: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.35);
 }
 
 footer {
-  margin-top: 2.2rem;
-  font-size: 0.85rem;
+  margin-top: 2rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--muted);
   text-align: center;
-}
-
-.divisor-laco {
-  color: var(--rosa-principal);
-  margin-bottom: 0.4rem;
-  letter-spacing: 2px;
 }
