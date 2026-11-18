@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Controle ESP32 - T6GC</title>
+  <title>🎀 Estufa Coquette ESP32 - T6GC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js" defer></script>
   <script src="script.js" defer></script>
@@ -11,7 +14,10 @@
 <body>
   <div class="container">
     <header>
-      <h1>Automação ESP32</h1>
+      <div class="titulo-grupo">
+        <span class="laco-topo">୨୧</span>
+        <h1>Estufa da Princesa <span>ESP32</span></h1>
+      </div>
       <div class="badges">
         <div class="badge">
           <span id="dot-broker" class="dot"></span>
@@ -26,12 +32,12 @@
 
     <!-- Leituras do DHT22 -->
     <section class="grid-sensores">
-      <div class="card">
-        <div class="sensor-label">🌡️ Temperatura</div>
+      <div class="card sensor-card">
+        <div class="sensor-label">🌸 Temperatura</div>
         <div class="sensor-valor" id="valor-temp">-- °C</div>
       </div>
-      <div class="card">
-        <div class="sensor-label">💧 Umidade</div>
+      <div class="card sensor-card">
+        <div class="sensor-label">🫧 Umidade</div>
         <div class="sensor-valor" id="valor-umid">-- %</div>
       </div>
     </section>
@@ -40,38 +46,41 @@
     <section class="grid-controles">
       <div class="card controle-card" id="card-ventoinha">
         <div class="controle-topo">
-          <span class="controle-nome">🌀 Ventoinha</span>
+          <span class="controle-nome">🦢 Ventoinha</span>
           <span class="estado-texto" id="status-ventoinha">Desligado</span>
         </div>
-        <button id="btn-ventoinha" data-dispositivo="ventoinha">Ligar</button>
+        <button id="btn-ventoinha" data-dispositivo="ventoinha">🎀 Ligar</button>
       </div>
 
       <div class="card controle-card" id="card-lampada">
         <div class="controle-topo">
-          <span class="controle-nome">💡 Lâmpada</span>
+          <span class="controle-nome">🕯️ Lâmpada</span>
           <span class="estado-texto" id="status-lampada">Desligado</span>
         </div>
-        <button id="btn-lampada" data-dispositivo="lampada">Ligar</button>
+        <button id="btn-lampada" data-dispositivo="lampada">🎀 Ligar</button>
       </div>
 
       <div class="card controle-card" id="card-bomba">
         <div class="controle-topo">
-          <span class="controle-nome">🚰 Bomba de Água</span>
+          <span class="controle-nome">🌷 Bomba de Água</span>
           <span class="estado-texto" id="status-bomba">Desligado</span>
         </div>
-        <button id="btn-bomba" data-dispositivo="bomba">Ligar</button>
+        <button id="btn-bomba" data-dispositivo="bomba">🎀 Ligar</button>
       </div>
 
       <div class="card controle-card" id="card-peltier">
         <div class="controle-topo">
-          <span class="controle-nome">❄️ Módulo Peltier</span>
+          <span class="controle-nome">🧁 Módulo Peltier</span>
           <span class="estado-texto" id="status-peltier">Desligado</span>
         </div>
-        <button id="btn-peltier" data-dispositivo="peltier">Ligar</button>
+        <button id="btn-peltier" data-dispositivo="peltier">🎀 Ligar</button>
       </div>
     </section>
 
-    <footer id="ultima-atualizacao">Aguardando dados do sensor...</footer>
+    <footer>
+      <p class="divisor-laco">୨୧ ┈┈┈┈┈┈┈┈┈┈┈┈┈┈ ୨୧</p>
+      <p id="ultima-atualizacao">Aguardando dados do sensor...</p>
+    </footer>
   </div>
 </body>
 </html>
